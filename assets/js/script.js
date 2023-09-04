@@ -241,7 +241,7 @@ console.log("teste", contact)
         <img src="${contact.imgLink}" alt="${contact.name}">
         <h2>${contact.name}</h2>
         <p>identificador:${contact.id}</p>
-        <p>celular: ${contact.celphone}</p>
+        <p>celular: ${contact.cellphone}</p>
         <p>Telefone: ${contact.landline}</p>
         <p>Data de nascimento: ${contact.birthdate}</p>
         <p>Idade: ${contact.age}</p>
