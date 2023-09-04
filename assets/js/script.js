@@ -8,15 +8,16 @@ class Contact {
         this.landline = landline;
         this.cellphone = cellphone;
         this.imgLink = imgLink;
-        this.birthdate = birthdate ;
+        this.birthdate = birthdate;
         this.email = email;
         this.cep = cep;
         this.city = city;
         this.instagram = instagram;
         this.github = github;
-        this.age = this.convertBirthdate() ;
+        this.age = this.convertBirthdate();
         this.getZodiacSign = this.getZodiacSign();
-        
+        this.id = this.generateId()
+
     }
 
     getZodiacSign() {
@@ -67,6 +68,10 @@ class Contact {
 
         return idade;
     }
+
+    generateId() {
+        return Math.floor(Math.random() * 3000);
+      }
 }
 
 
@@ -98,7 +103,7 @@ function checkInputs() {
     console.log(insta);
     console.log(git);
 
-    if (nome == "" || telefone == "" || celular == "" || img == "" || data == "" || email == ""|| cep == ""|| cidade == ""|| insta == ""|| git == "") {
+    if (nome == "" || telefone == "" || celular == "" || img == "" || data == "" || email == "" || cep == "" || cidade == "" || insta == "" || git == "") {
         console.log("os inputs estão vazios")
 
 
@@ -135,7 +140,7 @@ function envieMsg(msg, tipoMsg) {
 
 }
 
-function concludeRegister(){
+function concludeRegister() {
     let nome = document.getElementById("input-name").value;
     let telefone = document.getElementById("input-landline").value;
     let celular = document.getElementById("input-cellphone").value;
@@ -153,24 +158,26 @@ function concludeRegister(){
 
 
     contactBook.add(contact);
-    
+
     renderizarConteudo();
 
 }
 
 
-class ListContact{
-    constructor(){
+class ListContact {
+    constructor() {
         this.arrayContact = [];
     }
 
     add(parametro) {
 
+        console.log(parametro.id);
+
 
         if (checkInputs()) {
             envieMsg("preencha todos os campos")
         }
-        else if (!isURLValida(parametro.imgLink)){
+        else if (!isURLValida(parametro.imgLink)) {
             envieMsg("URL da imagem inválida!", 'erro');
         }
         else {
@@ -178,21 +185,25 @@ class ListContact{
         }
 
     }
+
+    getContactById(id){
+      return  contactBook.arrayContact.find(contact => contact.id == id)
+    }
 }
 
 const contactBook = new ListContact();
 console.log(contactBook);
 
-function renderizarConteudo(){
+function renderizarConteudo() {
 
     const listaHTML = document.getElementById("container-list");
     listaHTML.innerHTML = "";
 
-    let array =  contactBook.arrayContact;
+    let array = contactBook.arrayContact;
 
     array.forEach(contact => {
         const contactDiv = `
-        <div onclick="infoContact()" class="contactDetalhe">
+        <div onclick="infoContact(${contact.id})" class="contactDetalhe">
         <img src="${contact.imgLink}" alt="${contact.name}">
         <h2>${contact.name}</h2>
         <p>Telefone Fixo: ${contact.landline}</p>
@@ -203,11 +214,11 @@ function renderizarConteudo(){
         listaHTML.innerHTML += contactDiv;
     });
 
-   
+
 }
 
 function isURLValida(url) {
-    if(url.match(/\.(jpeg|jpg|gif|png)$/) != null){
+    if (url.match(/\.(jpeg|jpg|gif|png)$/) != null) {
         return true;
     } else {
         return false;
@@ -215,20 +226,21 @@ function isURLValida(url) {
 
 }
 
-function whatsappLink(){
-    let link = "https://api.whatsapp.com/send?phone=55" + this.cellphone;
-    return link;
-}
 
-function infoContact(){
+
+function infoContact(id) {
+
+const contact =  contactBook.getContactById(id);
+console.log("teste", contact)
     const listaHTML = document.getElementById("container-info");
-    listaHTML.innerHTcontactDetalheML = "";let array =  contactBook.arrayContact;
+    listaHTML.innerHTcontactDetalheML = ""; let array = contactBook.arrayContact;
 
-    array.forEach(contact => {
+   
         const contactDiv = `
         <div class="contactInfo">
         <img src="${contact.imgLink}" alt="${contact.name}">
         <h2>${contact.name}</h2>
+        <p>identificador:${contact.id}</p>
         <p>celular: ${contact.celphone}</p>
         <p>Telefone: ${contact.landline}</p>
         <p>Data de nascimento: ${contact.birthdate}</p>
@@ -240,14 +252,13 @@ function infoContact(){
         <p>Instagram: ${contact.instagram}</p>
         <p>Github: ${contact.github}</p>
         <br>
-        <img onclick="whatsappLink()" src="assets/images/whatsapp (1).png" alt="Whatsapp">
-        <img onclick="" src="assets/images/instagram.png" alt="Instagram">
-        <img onclick="" src="assets/images/github.png" alt="Github">
+        <a target="_blank" href="https://api.whatsapp.com/send?phone=55${contact.cellphone}"><img src="assets/images/whatsapp (1).png" id="img-wpp" alt="whatsapp" class="icons"></a>
+        <a  target="_blank" href="https://www.instagram.com/${contact.instagram}"><img src="assets/images/instagram.png" id="img-insta" alt="instagram" class="icons"></a>
+        <a target="_blank" href="https://github.com/${contact.github}"><img src="assets/images/github.png" id="img-git" alt="github" class="icons"></a>
         </div>
         `;
 
-        listaHTML.innerHTML += contactDiv;
-    });
+        listaHTML.innerHTML = contactDiv;;
 
 
 }
