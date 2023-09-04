@@ -1,5 +1,5 @@
 
-
+//init
 
 class Contact {
     constructor(name, landline, cellphone, imgLink, birthdate, email, cep, city, instagram, github) {
